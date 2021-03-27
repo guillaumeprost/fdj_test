@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="col-lg-8 mx-auto p-3 py-md-5">
+        <h1>Tirages</h1>
+        <div class="container">
+            <div class="row">
+                {% if vm.error %}
+                    <div class="alert alert-danger" role="alert">
+                        Une erreur système s'est produite, veuillez réessayer plus tard
+                    </div>
+                {% endif %}
+                <div class="col-md-8">
+                    {% for draw in vm.draws|default %}
+                        <div class="bg-light p-5 rounded">
+                            <h2>Tirage du {{ draw.drawnAt }}</h2>
+                            <p class="lead">Résultat EuroMillions - My Million</p>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md">
+                                        <ul class="list-group list-group-horizontal">
+                                            {% for result in draw.results %}
+                                                <li class="list-group-item {% if result.type == 'special' %}list-group-item-warning{% else %}{% endif %}">
+                                                    {{ result.value }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="col-md">
+                                        <ul class="list-group list-group-horizontal">
+                                            <li class="list-group-item list-group-item-secondary">My Million :</li>
+                                            {% for addon in draw.addons %}
+                                                <li class="list-group-item">{{ addon }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
