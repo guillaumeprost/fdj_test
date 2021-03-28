@@ -1,5 +1,7 @@
 <?php
 
+namespace App\ViewModel;
+
 use App\Entity\Draw;
 
 /**
@@ -15,7 +17,11 @@ class LastDrawViewModel
     /** @var string|null */
     public $error = null;
 
-    public function addDraws($draws)
+    /**
+     * @param array|Draw[] $draws
+     * @return $this
+     */
+    public function addDraws(array $draws): self
     {
         /** @var Draw $draw */
         foreach ($draws as $draw) {

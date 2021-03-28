@@ -9,12 +9,13 @@ use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use App\ViewModel\LastDrawViewModel;
 
 /**
  * Class lastDrawController
  * @package App\Controller
  *
- * @Route("/dernier-tirage", name="app_last_draw")
+ * @Route("/", name="app_last_draw")
  */
 class lastDrawController extends AbstractController
 {
@@ -29,7 +30,7 @@ class lastDrawController extends AbstractController
      */
     public function __invoke(DrawService $drawService): Response
     {
-        $viewModel = new \LastDrawViewModel();
+        $viewModel = new LastDrawViewModel();
 
         try{
             $viewModel->addDraws($drawService->getLastDraw());

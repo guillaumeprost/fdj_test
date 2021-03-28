@@ -2,24 +2,51 @@
 
 namespace App\Tests\Service;
 
-use App\Kernel;
 use App\Service\DrawService;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpClient\Exception\ClientException;
 
 class DrawServiceTest extends KernelTestCase
 {
+    /** @var DrawService */
+    private $drawService;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+        $this->drawService = self::$container->get(DrawService::class);
+    }
+
+    public function set($name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        self::bootKernel();
+        $this->drawService = self::$container->get(DrawService::class);
+
+    }
+
     public function testSuccessRetrieveDraws(): void
     {
-        self::bootKernel();
-        // gets the special container that allows fetching private services
-        $drawService = self::$container->get(DrawService::class);
+        $response = $this->drawService->retrieveDraws([]);
 
-        // this line is important ↓
-//        $drawService = $container->get(DrawService::class);
+        $this->assertIsArray($response);
+        $this->assertNotEmpty($response);
+    }
 
-        dump($drawService);exit;
+    public function testSuccessGetLastDraw(): void
+    {
+        $response = $this->drawService->getLastDraw();
 
+        $this->assertIsArray($response);
+        $this->assertCount(1, $response);
+    }
+
+    public function testFailWithWrongQuery()
+    {
+        $this->expectException(ClientException::class);
+        $this->drawService->retrieveDraws(['range' => 'nope']);
     }
 }

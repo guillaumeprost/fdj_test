@@ -15,8 +15,11 @@ use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
 /**
+ * Logic about draws
+ *
  * Class DrawService
  * @package App\Service
+ *
  */
 class DrawService
 {
@@ -65,11 +68,16 @@ class DrawService
             new ArrayDenormalizer()
         ], [new JsonEncoder()]);
 
+        $queryParameters = [
+            'include' => "results,addons"
+        ];
+
+        if (isset($filters['range'])){
+            $queryParameters['range'] = $filters['range'];
+        }
+
         $response = $this->client->request('GET', self::DRAW_API, [
-            'query' => [
-                'include' => "results,addons",
-                'range' => $filters['range'],
-            ]
+            'query' => $queryParameters
         ]);
 
         return $serializer->deserialize($response->getContent(), Draw::class.'[]', 'json');
